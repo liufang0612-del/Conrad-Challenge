@@ -1,0 +1,145 @@
+
+:root{
+  --bg:#f7fbff;
+  --card:#ffffff;
+  --accent:#0077b6;
+  --muted:#64748b;
+  --maxw:1200px;
+  --base-font:18px;
+}
+*{box-sizing:border-box}
+.body, body{font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background:var(--bg); color:#022a35; font-size:var(--base-font); line-height:1.6}
+.container{max-width:var(--maxw);margin:0 auto;padding:28px}
+.site-header{background:linear-gradient(90deg, #003f5c, #0077b6);color:white}
+.header-inner{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:16px}
+.logo{height:48px}
+.team-name{font-size:18px;margin:0}
+.nav a{color:white;margin-left:18px;text-decoration:none}
+
+/* Panels: each occupies full viewport height */
+.panel{min-height:100vh;display:flex;align-items:center}
+.panel .panel-inner{display:flex;align-items:center;gap:40px}
+.panel .text{flex:1;padding:40px}
+.panel .media{flex:1;padding:40px}
+.panel img{max-width:100%;border-radius:8px;display:block}
+.hero{background:linear-gradient(180deg, rgba(0,119,182,0.06), transparent)}
+.hero .panel-inner{align-items:center}
+.logo-small{height:40px;margin-bottom:18px}
+.hero-title{font-size:48px;margin:6px 0 12px;line-height:1.05}
+.lead{color:var(--muted);margin:0 0 18px;font-size:1.1rem}
+.buttons{margin-top:18px}
+.btn{background:var(--accent);color:white;padding:10px 16px;border-radius:6px;text-decoration:none;margin-right:8px}
+.btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--accent)}
+
+/* Alternate panels layout (media left, text right) */
+.panel.alt .panel-inner{flex-direction:row-reverse}
+
+/* Innovation panel: large left design image with text on the right */
+#innovation .panel-inner{align-items:center}
+#innovation .media{flex:1.4;padding:24px}
+#innovation .text{flex:0.9;padding:40px}
+#innovation .media img{width:100%;height:85vh;object-fit:cover;border-radius:12px;display:block;box-shadow:0 12px 40px rgba(2,6,23,0.06)}
+
+@media (max-width:900px){
+  #innovation .media img{height:50vh}
+  #innovation .media,#innovation .text{padding:18px}
+}
+
+/* Timeline: central vertical axis */
+.timeline-container{position:relative;padding:64px 20px;max-width:920px}
+.timeline-header{text-align:center;margin-bottom:12px}
+.timeline-header h3{margin:0;font-size:2rem}
+.timeline-header .timeline-sub{color:var(--muted);margin:6px 0 24px}
+.timeline-line{position:absolute;left:50%;top:4%;bottom:4%;width:12px;background:linear-gradient(#0077b6, #003f5c);transform:translateX(-50%);border-radius:6px;z-index:1}
+.timeline-item{position:relative;width:100%;display:grid;grid-template-columns:minmax(320px,1fr) 140px minmax(320px,1fr);align-items:center;gap:36px;padding:56px 0;opacity:0;transform:translateY(26px);transition:all 600ms cubic-bezier(.2,.8,.2,1)} 
+
+.timeline-item .marker{grid-column:2;justify-self:center;position:relative;width:36px;height:36px;background:transparent;border-radius:50%;transform:translateY(-50%);z-index:3;display:flex;align-items:center;justify-content:center}
+/* solid blue circular dot replaces numbered badge */
+.timeline-item .marker .badge{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:var(--accent);color:transparent;padding:0;border:0;box-shadow:0 6px 12px rgba(0,119,182,0.18)}
+/* alternate dot side: odd items left, even items right */
+.timeline-item:nth-child(odd) .marker .badge{left:-44px}
+.timeline-item:nth-child(even) .marker .badge{left:40px}
+.timeline-item .side{display:flex;align-items:center;gap:12px;min-width:0;max-width:calc(50% - 120px)}
+.timeline-item .card{background:var(--card);padding:28px 24px;border-radius:12px;box-shadow:0 12px 30px rgba(2,6,23,0.06);max-width:100%;width:calc(100% - 24px);min-height:200px;display:flex;align-items:stretch;overflow:hidden}
+.timeline-item .card-inner{display:flex;align-items:flex-start;gap:18px}
+.timeline-item .card-inner .card-thumb{width:120px;height:90px;object-fit:cover;border-radius:8px;flex-shrink:0;align-self:center}
+.timeline-item .card .card-body{flex:1}
+.timeline-item .card .card-body h4{margin:0 0 6px;font-size:1.05rem;color:var(--accent)}
+.timeline-item .card .card-body p{margin:0;color:var(--muted)} 
+.timeline-item .card.left .card-inner{flex-direction:row}
+timeline-item .card.right .card-inner{flex-direction:row}
+/* place labels close to axis and keep symmetric distance */
+.timeline-item .side.left{justify-content:flex-end;padding-right:64px}
+.timeline-item .side.right{justify-content:flex-start;padding-left:64px}
+/* ensure left/right cards sit next to the axis and align flush to their column */
+.timeline-item .card.left{justify-self:end;margin-right:12px;width:calc(100% - 12px)}
+.timeline-item .card.right{justify-self:start;margin-left:12px;width:calc(100% - 12px)}
+/* ensure card text wraps and stays inside */
+.timeline-item .card .card-body{overflow-wrap:break-word;word-break:break-word}
+
+/* make the timeline visually larger overall */
+.panel.alt .timeline-container{transform:scale(1.04);transform-origin:center}
+.panel.alt .panel-inner{gap:160px}
+
+/* ensure timeline area sits left in the panel, with descriptive text on right */
+.panel.alt .timeline-container{margin-left:0}
+
+/* Improve spacing and stacking to avoid overlap */
+.timeline-line{z-index:1}
+.timeline-item .content{z-index:2}
+.timeline-item .marker{z-index:3}
+.timeline-item{margin-bottom:32px}
+.timeline-item.in-view{opacity:1;transform:translateY(0)}
+
+.impact-list{margin:12px 0 0 18px}
+.site-footer{background:#021826;color:#9fb3c3;padding:18px}
+.small{color:var(--muted)}
+
+/* Responsive */
+@media (max-width:900px){
+  .panel .panel-inner{flex-direction:column}
+  .panel.alt .panel-inner{flex-direction:column}
+  .timeline-container{height:auto;padding:24px;max-width:none}
+  .timeline-line{left:20px;transform:none}
+  .timeline-item{display:block;padding:18px 0}
+  .timeline-item .marker{left:20px;position:relative;margin-left:0;margin-bottom:10px}
+  .timeline-item .marker .badge{left:-12px;transform:translateY(-50%);width:28px;height:28px}
+  .timeline-item .card{max-width:100%;margin-left:48px}
+  .timeline-item .card.left .card-inner,.timeline-item .card.right .card-inner{flex-direction:row}
+  .timeline-item .card .card-inner .card-thumb{width:88px;height:64px}
+}
+
+/* Importance image scroller */
+.panel.importance .importance-inner{display:flex;flex-direction:column;gap:18px}
+.panel.importance .importance-text{padding:56px 28px 8px}
+.panel.importance .importance-text h3{font-size:2rem;margin-bottom:8px}
+.panel.importance .importance-text p{font-size:1.05rem}
+
+.image-carousel{position:relative;overflow:hidden;border-radius:8px}
+.carousel-track{display:flex;transition:transform 600ms ease}
+/* diagnostic visuals: show slide frame and fallback background in case images fail to load */
+.carousel-track .slide{background:#f3f7f9;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(2,6,23,0.03)}
+.carousel-track .slide.missing{background:#fee9e9;border:1px solid #e65;}
+.carousel-track .slide.missing::after{content:'Image failed to load';position:absolute;left:12px;top:12px;color:#a00;font-weight:700}
+/* Show four slides at once */
+.carousel-track .slide{min-width:25%;flex:0 0 25%;aspect-ratio:4/3;position:relative;overflow:hidden}
+.carousel-track .slide img{position:relative;display:block;width:100%;height:100%;object-fit:cover;object-position:bottom center;border-radius:0}
+@media (max-width:1200px){
+  /* show 3 slides on large tablets */
+  .carousel-track .slide{min-width:33.333%;flex:0 0 33.333%}
+}
+@media (max-width:900px){
+  /* show 2 slides on medium screens */
+  .carousel-track .slide{min-width:50%;flex:0 0 50%}
+}
+@media (max-width:600px){
+  /* show 1 slide on small screens */
+  .carousel-track .slide{min-width:100%;flex:0 0 100%}
+}
+
+/* If the image scroller content is taller than viewport on small screens, allow natural flow */
+@media (max-width:700px){
+  .image-scroll{height:50vh}
+  .image-scroll img{height:50vh}
+}
