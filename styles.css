@@ -6,14 +6,19 @@
   --muted:#64748b;
   --maxw:1200px;
   --base-font:18px;
+
+  /* Key Innovation image size variables (editable) */
+  --innovation-img-width: 900px;
+  --innovation-img-height: 600px;
 }
 *{box-sizing:border-box}
 .body, body{font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background:var(--bg); color:#022a35; font-size:var(--base-font); line-height:1.6}
 .container{max-width:var(--maxw);margin:0 auto;padding:28px}
-.site-header{background:linear-gradient(90deg, #003f5c, #0077b6);color:white}
-.header-inner{display:flex;align-items:center;justify-content:space-between}
+.site-header{background:linear-gradient(90deg, #003f5c, #0077b6);color:white;position:sticky;top:0;z-index:1000;width:100%;transition:box-shadow 200ms ease,backdrop-filter 200ms ease;-webkit-backdrop-filter: blur(6px);backdrop-filter: blur(6px)}
+.site-header.scrolled{box-shadow:0 8px 30px rgba(2,6,23,0.08)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0}
 .brand{display:flex;align-items:center;gap:16px}
-.logo{height:48px}
+.logo{height:80px}
 .team-name{font-size:18px;margin:0}
 .nav a{color:white;margin-left:18px;text-decoration:none}
 
@@ -24,10 +29,22 @@
 .panel .media{flex:1;padding:40px}
 .panel img{max-width:100%;border-radius:8px;display:block}
 .hero{background:linear-gradient(180deg, rgba(0,119,182,0.06), transparent)}
-.hero .panel-inner{align-items:center}
-.logo-small{height:40px;margin-bottom:18px}
-.hero-title{font-size:48px;margin:6px 0 12px;line-height:1.05}
+.hero .panel-inner{align-items:flex-start;padding-top:8px;padding-bottom:18px}
+@media (max-width:900px){
+  .hero .panel-inner{padding-top:8px;padding-bottom:10px}
+}
+.logo-small{height:80px;margin-bottom:18px}
+.hero-brand{font-size:64px;margin:6px 0 6px;line-height:1;font-weight:800;color:var(--accent)}
+.hero-title{font-size:36px;margin:6px 0 12px;line-height:1.05}
 .lead{color:var(--muted);margin:0 0 18px;font-size:1.1rem}
+
+@media (max-width:900px){
+  .hero-brand{font-size:38px}
+  .hero-title{font-size:20px}
+  /* Prevent overly large logos from breaking small screens */
+  .logo{height:64px}
+  .logo-small{height:48px}
+}
 .buttons{margin-top:18px}
 .btn{background:var(--accent);color:white;padding:10px 16px;border-radius:6px;text-decoration:none;margin-right:8px}
 .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--accent)}
@@ -40,6 +57,21 @@
 #innovation .media{flex:1.4;padding:24px}
 #innovation .text{flex:0.9;padding:40px}
 #innovation .media img{width:100%;height:85vh;object-fit:cover;border-radius:12px;display:block;box-shadow:0 12px 40px rgba(2,6,23,0.06)}
+
+/* Key Innovation specific fixed size */
+.innovation-image{
+  width:var(--innovation-img-width);
+  height:var(--innovation-img-height);
+  object-fit:cover;
+  display:block;
+  margin:0 auto;
+  border-radius:12px;
+}
+
+
+@media (max-width:900px){
+  .innovation-image{width:100%;height:auto;}
+}
 
 @media (max-width:900px){
   #innovation .media img{height:50vh}
@@ -61,9 +93,69 @@
 .timeline-item:nth-child(odd) .marker .badge{left:-44px}
 .timeline-item:nth-child(even) .marker .badge{left:40px}
 .timeline-item .side{display:flex;align-items:center;gap:12px;min-width:0;max-width:calc(50% - 120px)}
-.timeline-item .card{background:var(--card);padding:28px 24px;border-radius:12px;box-shadow:0 12px 30px rgba(2,6,23,0.06);max-width:100%;width:calc(100% - 24px);min-height:200px;display:flex;align-items:stretch;overflow:hidden}
-.timeline-item .card-inner{display:flex;align-items:flex-start;gap:18px}
-.timeline-item .card-inner .card-thumb{width:120px;height:90px;object-fit:cover;border-radius:8px;flex-shrink:0;align-self:center}
+.timeline-item .card{
+  background:var(--card);
+  padding:28px 24px;
+  border-radius:12px;
+  box-shadow:0 12px 30px rgba(2,6,23,0.06);
+  max-width:100%;width:calc(100% - 24px);
+  min-height:200px;display:flex;
+  align-items:stretch;
+  overflow:hidden
+}
+.timeline-item .card-inner{
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  flex-wrap:wrap
+}
+.timeline-item .card .card-body{
+  flex:1;
+  min-width:0;
+  position:relative;
+  z-index:3
+}
+
+/* Restore: show thumbnails at their original pixel dimensions with no caps.
+   This removes the previous max-height cap and avoids forcing thumbnails
+   to fit the card width. Cards will allow overflow so images can render
+   at full size (may overlap or increase layout height). */
+.timeline-item .card{overflow:visible}
+.timeline-item .card-inner .card-thumb{
+  width: auto;
+  height: auto;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: none !important;
+  display: inline-block;
+  position: relative;
+  z-index:1;
+}
+
+/* Highest-specificity override to undo general .panel img rules for thumbnails */
+.timeline-item .card-inner > .card-thumb{
+  max-width: none !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Keep other inline images responsive, but exclude .card-thumb from that rule */
+.timeline-item .card-inner img:not(.card-thumb){max-width:100%;height:auto;display:block}
+/* Preserve original image pixel dimensions when possible, but prevent
+   extremely tall images from breaking the timeline layout. Images will
+   render at their intrinsic size up to a viewport-friendly cap. */
+.timeline-item .card-inner .card-thumb{
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  flex-shrink: 0;
+  align-self: center;
+  max-width: none;
+  max-height: 70vh;
+  display: block;
+  margin: 0;
+}
 .timeline-item .card .card-body{flex:1}
 .timeline-item .card .card-body h4{margin:0 0 6px;font-size:1.05rem;color:var(--accent)}
 .timeline-item .card .card-body p{margin:0;color:var(--muted)} 
@@ -107,7 +199,7 @@ timeline-item .card.right .card-inner{flex-direction:row}
   .timeline-item .marker .badge{left:-12px;transform:translateY(-50%);width:28px;height:28px}
   .timeline-item .card{max-width:100%;margin-left:48px}
   .timeline-item .card.left .card-inner,.timeline-item .card.right .card-inner{flex-direction:row}
-  .timeline-item .card .card-inner .card-thumb{width:88px;height:64px}
+  .timeline-item .card .card-inner .card-thumb{width:auto;height:auto;object-fit:contain;max-width:none;max-height:none}
 }
 
 /* Importance image scroller */
@@ -142,4 +234,14 @@ timeline-item .card.right .card-inner{flex-direction:row}
 @media (max-width:700px){
   .image-scroll{height:50vh}
   .image-scroll img{height:50vh}
+}
+
+/* Force timeline card thumbnails to a hard size of 50x60px */
+.timeline-item .card-inner .card-thumb{
+  width: 160px !important;
+  height: 160px !important;
+  object-fit: cover !important;
+  max-width: none !important;
+  max-height: none !important;
+  display: inline-block !important;
 }

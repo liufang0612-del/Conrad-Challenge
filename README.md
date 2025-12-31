@@ -8,12 +8,9 @@
 
 快速预览（在本地）：
 
-
 ```bash
 # 进入项目文件夹
 cd "康莱德网站"
-
-
 # 在 macOS 或 Linux 上用 Python 内置服务器预览
 python3 -m http.server 8000
 # 然后在浏览器打开 http://localhost:8000

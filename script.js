@@ -72,7 +72,65 @@ function initImageCarousel(){
   track.addEventListener('transitionend', checkCarouselImages);
 }
 
+/* No manual header spacing needed when using position:sticky; keep header in-flow */
+
+function watchHeaderScroll(){
+  const header = document.querySelector('.site-header');
+  if(!header) return;
+  const onScroll = ()=> header.classList.toggle('scrolled', window.scrollY>6);
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+}
+
 document.addEventListener('DOMContentLoaded', ()=>{
   initTimelineObserver();
   initImageCarousel();
+  watchHeaderScroll();
+  setThumbsHalfSize();
 });
+
+
+
+// Resize .card-thumb images to exactly half their intrinsic pixel dimensions.
+// This preserves aspect ratio and uses the browser image natural size.
+function setThumbsHalfSize(){
+  // only target thumbnails explicitly marked for auto-scaling
+  const thumbs = document.querySelectorAll('.card-thumb.auto-scale');
+  if(!thumbs.length) return;
+  thumbs.forEach(img=>{
+    function apply(){
+      // Use the image's current displayed width so we shrink what the
+      // user actually sees (not the original file pixels which may be
+      // larger than the container). Preserve aspect ratio by setting
+      // height to auto.
+      const rect = img.getBoundingClientRect();
+      let currentWidth = rect && rect.width ? rect.width : (img.clientWidth || img.naturalWidth || 0);
+      if(!currentWidth) return;
+      const newW = Math.max(1, Math.floor(currentWidth / 2));
+      img.style.width = newW + 'px';
+      img.style.height = 'auto';
+      img.style.maxWidth = 'none';
+      img.style.maxHeight = 'none';
+      img.style.objectFit = 'none';
+      img.style.display = 'inline-block';
+
+      // Debug logging: show before/after sizes
+      const afterRect = img.getBoundingClientRect();
+      console.debug('thumb:', img.src, 'natural:', img.naturalWidth, 'displayBefore:', currentWidth, 'setTo:', newW, 'computedAfter:', afterRect.width);
+
+      // If inline width didn't change computed layout (some CSS forcing),
+      // apply a visual scale fallback so it appears half-size immediately.
+      if(afterRect.width > newW + 2){
+        const scale = newW / afterRect.width;
+        img.style.transformOrigin = 'left top';
+        img.style.transform = 'scale(' + scale + ')';
+        console.debug('applied transform scale fallback:', scale);
+      }
+    }
+    if(img.complete){
+      apply();
+    } else {
+      img.addEventListener('load', apply);
+    }
+  });
+}
